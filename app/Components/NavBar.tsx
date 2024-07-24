@@ -12,7 +12,7 @@ const NavBar = () => {
         backdropFilter: "blur(50px)",
         backgroundColor: "rgba(17,0,158,0.8)",
         color: "#fff",
-        zIndex: 49,
+        zIndex: 100000,
         display: "flex",
         paddingBlock: 2,
       }}

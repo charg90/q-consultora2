@@ -2,8 +2,8 @@ import Image from "next/image";
 import EconomyImage from "../public/economy.png";
 import Quality from "../public/quality.png";
 import Soluciones from "../public/solucionesEmpresariales.png";
-import Contenido from "../public/nuestro contenido.png";
-import Nosotros from "../public/nosotros.png";
+import Contenido from "../public/nuestro contenido.jpeg";
+import Nosotros from "../public/nosotros.jpeg";
 import EconomGestion from "./Components/EconomGestion";
 import Footer from "./Components/Footer";
 

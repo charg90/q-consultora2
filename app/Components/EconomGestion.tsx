@@ -29,15 +29,22 @@ const EconomGestion = () => {
         break;
     }
   };
+
+  const closeModal = (
+    setModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    setModalOpen(false);
+  };
+
   return (
-    <div className="flex flex-col sm:flex-row h-full max-h-[700px]  w-full ">
+    <div className="flex flex-col sm:flex-row h-full max-h-[700px] w-full ">
       <div
         className="flex relative justify-center w-full "
         onClick={() => handleImageClick("economy")}
       >
-        <div className="absolute z-50 top-[02%] text-black p-4 cursor-pointer">
+        <div className="absolute z-50 top-[45%] text-black p-4 cursor-pointer">
           <p className="text-[60px] font-bold">Economia</p>
-          <p className="text-xl">Leer Mas</p>
+          <p className="text-black text-xl font-bold">Leer Mas</p>
         </div>
 
         <Image
@@ -53,18 +60,13 @@ const EconomGestion = () => {
         className="flex relative justify-center w-full "
         onClick={() => handleImageClick("gestion")}
       >
-        <div className="absolute z-50 top-[02%]">
-          <p
-            className="text-white text-[60px] font-bold"
-            style={{ color: "#000" }}
-          >
-            Gestion
-          </p>
-          <p className="text-white text-xl font-bold ">Leer Mas</p>
+        <div className="absolute z-50 top-[45%]">
+          <p className="text-black text-[60px] font-bold">Gestion</p>
+          <p className="text-black text-xl font-bold ">Leer Mas</p>
         </div>
         <Image
           src={Gestion}
-          alt="Economy"
+          alt="Gestion"
           style={{ filter: "grayscale(100%)", width: "100%" }}
           className="w-full"
           onMouseOver={(e) => (e.currentTarget.style.filter = "grayscale(0%)")}
@@ -75,13 +77,13 @@ const EconomGestion = () => {
         className="flex relative justify-center  w-full"
         onClick={() => handleImageClick("inversion")}
       >
-        <div className="absolute z-50 top-[5%] text-white ">
-          <p className="text-xl font-bold">Inversion</p>
-          <p className="text-xl font-bold">Leer Mas</p>
+        <div className="absolute z-50 top-[45%] text-white ">
+          <p className="text-black text-[60px] font-bold">Inversion</p>
+          <p className="text-black text-xl font-bold ">Leer Mas</p>
         </div>
         <Image
           src={Inversion}
-          alt="Economy"
+          alt="Inversion"
           style={{ filter: "grayscale(100%)", width: "100%" }}
           className="w-full"
           onMouseOver={(e) => (e.currentTarget.style.filter = "grayscale(0%)")}
@@ -89,13 +91,19 @@ const EconomGestion = () => {
         />
       </div>
       {modalOpenEconomy && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          onClick={() => closeModal(setModalOpenEconomy)}
+        >
           <div className="absolute inset-0 bg-black opacity-50"></div>
-          <div className="relative">
-            <div className="h-50vh w-full  sm:w-90vw">
+          <div
+            className="relative"
+            onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal content from closing the modal
+          >
+            <div className="h-50vh w-full sm:w-90vw">
               <Image
                 src={EconomiaModal}
-                alt="Economy"
+                alt="Economia Modal"
                 width={550}
                 className="object-cover"
               />
@@ -111,13 +119,19 @@ const EconomGestion = () => {
         </div>
       )}
       {modalOpenGestion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          onClick={() => closeModal(setModalOpenGestion)}
+        >
           <div className="absolute inset-0 bg-black opacity-50"></div>
-          <div className="relative">
-            <div className="h-20vh w-full  sm:w-90vw">
+          <div
+            className="relative"
+            onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal content from closing the modal
+          >
+            <div className="h-20vh w-full sm:w-90vw">
               <Image
                 src={GestionModal}
-                alt="Economy"
+                alt="Gestion Modal"
                 width={550}
                 className="object-cover"
               />
@@ -132,24 +146,30 @@ const EconomGestion = () => {
         </div>
       )}
       {modalOpenInversion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          onClick={() => closeModal(setModalOpenInversion)}
+        >
           <div className="absolute inset-0 bg-black opacity-50"></div>
-          <div className="relative">
+          <div
+            className="relative"
+            onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal content from closing the modal
+          >
             <div className="h-[500px] w-[500px] absolute bottom-[0px] ">
               <Image
                 src={InversionModal}
-                alt="Economy"
+                alt="Inversion Modal"
                 width={500}
                 height={100}
                 className="object-contain"
               />
             </div>
-            <button
+            {/* <button
               onClick={() => setModalOpenInversion(false)}
               className="text-blue-500 mt-14 absolute top-0 right-0"
             >
               <IoClose size={34} />
-            </button>
+            </button> */}
           </div>
         </div>
       )}
