@@ -35,7 +35,7 @@ const EconomGestion = () => {
         className="flex relative justify-center w-full "
         onClick={() => handleImageClick("economy")}
       >
-        <div className="absolute z-50 top-[40%] text-white p-4 cursor-pointer">
+        <div className="absolute z-50 top-[02%] text-black p-4 cursor-pointer">
           <p className="text-[60px] font-bold">Economia</p>
           <p className="text-xl">Leer Mas</p>
         </div>
@@ -135,12 +135,13 @@ const EconomGestion = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="relative">
-            <div className="h-50vh w-full  sm:w-90vw">
+            <div className="h-[500px] w-[500px] absolute bottom-[0px] ">
               <Image
                 src={InversionModal}
                 alt="Economy"
-                width={550}
-                className="object-cover"
+                width={500}
+                height={100}
+                className="object-contain"
               />
             </div>
             <button
