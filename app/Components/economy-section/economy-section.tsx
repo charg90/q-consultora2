@@ -1,0 +1,82 @@
+import Image from "next/image";
+import { Target, Handshake, Calendar, Landmark } from "lucide-react";
+import Bull from "@/public/bull.jpg";
+
+export default function EconomySection() {
+  return (
+    <section
+      id="ECONOMIA"
+      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden"
+    >
+      <div className="absolute inset-0">
+        <Image
+          src={Bull}
+          alt="Mountain landscape"
+          fill
+          className="object-cover"
+          priority
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/70" />
+      </div>
+
+      <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-center px-4 text-center text-white">
+        <h1 className="mb-6 text-5xl font-bold md:text-6xl lg:text-7xl">
+          Establecidos en 2022
+        </h1>
+        <p className="mx-auto mb-20 max-w-3xl text-lg md:text-xl">
+          Q | Capital es un centro de consultoría económica, centramos nuestra
+          atención a las necesidades de nuestros clientes. Asesoramos para
+          brindar una ayuda estratégica para una correcta toma de decisión
+          futura.
+        </p>
+
+        <div className="grid w-full gap-8 md:grid-cols-3">
+          <div className="flex flex-col items-center justify-between h-full">
+            <div className="rounded-full bg-white/10 p-4 mb-6">
+              <Landmark className="h-8 w-8" />
+            </div>
+            <div className="flex flex-col items-center flex-grow justify-center">
+              <h3 className="text-2xl font-semibold mb-4">
+                {/* Investigación {">"} Ventas */}
+              </h3>
+              <p className="mx-auto max-w-xs">
+                {/* This emphasis results in a candid and precise product. */}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center justify-between h-full">
+            <div className="rounded-full bg-white/10 p-4 mb-6">
+              <Handshake className="h-8 w-8" />
+            </div>
+            <div className="flex flex-col items-center flex-grow justify-center">
+              <h3 className="text-2xl font-semibold mb-4">
+                {/* Trusted By Decision Makers */}
+              </h3>
+              <p className="mx-auto max-w-xs">
+                {/* We serve some of the world s largest investment banks, wealth
+                managers, and family offices. */}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center justify-between h-full">
+            <div className="rounded-full bg-white/10 p-4 mb-6">
+              <Calendar className="h-8 w-8" />
+            </div>
+            <div className="flex flex-col items-center flex-grow justify-center">
+              <h3 className="text-2xl font-semibold mb-4">
+                {/* 150+ Years Experience */}
+              </h3>
+              <p className="mx-auto max-w-xs">
+                {/* We bring an in-depth understanding of global markets, politics,
+                and history to the research process. */}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
