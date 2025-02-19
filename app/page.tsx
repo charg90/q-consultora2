@@ -1,36 +1,41 @@
-import Image from "next/image";
-import EconomyImage from "../public/economy.png";
-import Quality from "../public/quality.png";
-import Soluciones from "../public/solucionesEmpresariales.png";
-import Contenido from "../public/nuestro contenido.jpeg";
-import Nosotros from "../public/nosotros.jpeg";
-import EconomGestion from "./Components/EconomGestion";
-import Footer from "./Components/Footer";
+import EconomySection from "./Components/economy-section/economy-section";
+import Soluciones from "./Components/soluciones/soluciones";
+import QCapitalBackground from "./Components/background/background";
+import GlobalDiversification from "./Components/global-diversification/global-diversifaction";
+import FinancialSectorResponsibility from "./Components/financial-sector/financial-sector";
+import ComprehensiveResearch from "./Components/comprehensive/comprehensive";
+import ComprehensiveServices from "./Components/comprehensive-services/comprehensive-services";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Q | Capital Group",
+  description:
+    "Q | Capital Group - Soluciones Empresariales y Consultoría Económica",
+  icons: {
+    icon: "/QCapitalICO.ico",
+  },
+};
 
 export default function Home() {
   return (
     <div className="w-full ">
-      <div id="ECONOMIA">
-        <Image src={EconomyImage} alt="Economy" />
-      </div>
-      <div id="QUALITY">
-        <Image src={Quality} alt="Quality" />
-      </div>
-      <div id="ECONOMIAGESTION">
-        <EconomGestion />
-      </div>
-      <div id="SOLUCIONES">
-        <Image src={Soluciones} alt="Economy" />
-      </div>
-      <div id="CONTENIDO">
-        <Image src={Contenido} alt="Economy" />
-      </div>
-      <div id="NOSOTROS">
+      <EconomySection />
+
+      <QCapitalBackground />
+
+      <Soluciones />
+
+      <FinancialSectorResponsibility />
+
+      <GlobalDiversification />
+
+      <ComprehensiveResearch />
+
+      <ComprehensiveServices />
+      {/* <div id="NOSOTROS">
         <Image src={Nosotros} alt="Economy" />
-      </div>
-      <div>
-        <Footer />
-      </div>
+      </div> */}
+      <div>{/* <Footer /> */}</div>
     </div>
   );
 }
