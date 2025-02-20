@@ -38,32 +38,32 @@ export default function ComprehensiveServices() {
 
   const services = [
     {
-      title: "Asesoramiento Económico",
+      title: "Gestion Empresarial",
       icon: ChartBar,
       items: [
-        "Estudios Macroeconomicos especificos",
-        "Analisis de competencia de mercado",
-        "Outlook y proyecciones a corto, mediano y largo plazo",
-        "Asesoramiento personalizado a Directivos",
+        "Coaching Finanzas Empresariales",
+        "Optimizacion Procesos Productivos y Administrativos",
+        "Implementacion y Seguimiento de Sistemas de Gestion",
+        "Management Development",
       ],
     },
     {
-      title: "Gestion Economico Financiera",
+      title: "Servicios Macro-Economicos",
       icon: Brain,
       items: [
-        "Implementación y seguimiento Sistemas de Gestion",
-        "Plan Do Check Act Coaching",
-        "Quick Response Target Control",
-        "Bussines Management Board",
+        "Workshops y Capacitaciones",
+        "Optimizacion Procesos Productivos y Administrativos",
+        "Implementacion y Seguimiento de Sistemas de Gestion",
+        "Management Development",
       ],
     },
     {
-      title: "Inversión Estratégica",
+      title: "Inversión Futura",
       icon: Briefcase,
       items: [
-        "Apertura de cuentas en Brokers locales e Internacionales",
-        "Estudio de inversión y financiación estrategica",
-        "Summit especificos para directivos y staff en materia de formación y desarrollo financiero",
+        "Asesoramiento Personalizado Mercados Bursátiles",
+        "Estudios de Mercado, Obtencion de Deuda y Financionamiento",
+        "Apertura de cuenta de Broker Local",
       ],
     },
   ];
@@ -71,7 +71,7 @@ export default function ComprehensiveServices() {
   return (
     <div
       ref={ref}
-      className="bg-black text-white min-h-screen w-full py-16 px-4"
+      className="bg-black text-white min-h-screen w-full py-16 px-4 "
     >
       <motion.div
         variants={containerVariants}
@@ -83,13 +83,13 @@ export default function ComprehensiveServices() {
           variants={itemVariants}
           className="text-4xl md:text-5xl font-bold text-center tracking-wider mb-12"
         >
-          Our Comprehensive Research
+          Our Services
         </motion.h2>
 
         {services.map((service, index) => (
           <motion.div key={index} variants={itemVariants} className="space-y-6">
             <motion.div
-              className="flex items-center space-x-4"
+              className="flex s items-center space-x-4"
               initial={{ opacity: 0, x: -20 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
