@@ -1,9 +1,10 @@
 "use client";
 
+import type React from "react";
+
 import { useState, useEffect } from "react";
 import Logo from "@/public/Q  Capital.jpg";
 import Image from "next/image";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
@@ -14,11 +15,11 @@ const NavBar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const menuItems = [
-    { href: "#ECONOMIA", label: "Economia" },
-    { href: "#QUALITY", label: "Calidad" },
-    { href: "#ECONOMIAGESTION", label: "Economia y Gestion" },
-    { href: "#CONTENIDO", label: "Contenido" },
-    { href: "#NOSOTROS", label: "Nosotros" },
+    { href: "#QCapitalBackground", label: "Background" },
+    { href: "#soluciones", label: "Soluciones" },
+    { href: "#comprehensiveResearch", label: "Comprenhesive Research" },
+    { href: "#goDeeper", label: "Go Deeper" },
+    { href: "#team", label: "Our Team" },
   ];
 
   useEffect(() => {
@@ -29,6 +30,22 @@ const NavBar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleSmoothScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    e.preventDefault();
+    const targetId = href.replace("#", "");
+    const elem = document.getElementById(targetId);
+    if (elem) {
+      setIsOpen(false); // Close mobile menu if open
+      window.scrollTo({
+        top: elem.offsetTop - (scrolled ? 64 : 80), // Adjust for navbar height
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <>
@@ -55,13 +72,14 @@ const NavBar = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex justify-end gap-4 lg:gap-6">
           {menuItems.map((item) => (
-            <Link
+            <a
               key={item.href}
               href={item.href}
-              className="text-white text-sm lg:text-base hover:text-gray-300 transition-colors"
+              onClick={(e) => handleSmoothScroll(e, item.href)}
+              className="text-white text-sm lg:text-base hover:text-gray-300 transition-colors cursor-pointer"
             >
               {item.label}
-            </Link>
+            </a>
           ))}
         </div>
 
@@ -85,14 +103,14 @@ const NavBar = () => {
           >
             <div className="flex flex-col items-center py-4">
               {menuItems.map((item) => (
-                <Link
+                <a
                   key={item.href}
                   href={item.href}
-                  className="py-2 text-white hover:text-gray-300 transition-colors text-sm"
-                  onClick={toggleMenu}
+                  onClick={(e) => handleSmoothScroll(e, item.href)}
+                  className="py-2 text-white hover:text-gray-300 transition-colors text-sm cursor-pointer"
                 >
                   {item.label}
-                </Link>
+                </a>
               ))}
             </div>
           </motion.div>

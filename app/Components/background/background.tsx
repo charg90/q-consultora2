@@ -12,6 +12,7 @@ export default function QCapitalBackground() {
     <div
       ref={ref}
       className="min-h-screen bg-black flex items-center justify-center p-4"
+      id="QCapitalBackground"
     >
       <motion.div
         initial={{ opacity: 0, y: 20 }}

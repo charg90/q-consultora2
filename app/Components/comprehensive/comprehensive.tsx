@@ -12,6 +12,7 @@ export default function ComprehensiveResearch() {
   return (
     <div
       ref={ref}
+      id="comprehensiveResearch"
       className="relative w-full overflow-hidden"
       style={{ minHeight: "90vh" }}
     >

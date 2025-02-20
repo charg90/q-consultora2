@@ -6,6 +6,11 @@ import FinancialSectorResponsibility from "./Components/financial-sector/financi
 import ComprehensiveResearch from "./Components/comprehensive/comprehensive";
 import ComprehensiveServices from "./Components/comprehensive-services/comprehensive-services";
 import { Metadata } from "next";
+import CircularImage from "./Components/teams/circular-image";
+import CircularImageEmi from "./Components/teams/circular-emi";
+import CircularImageJuan from "./Components/teams/circular-juan";
+import { TeamSection } from "./Components/teams/team-section";
+import GoDeeper from "./Components/go-depper/go-depper";
 
 export const metadata: Metadata = {
   title: "Q | Capital Group",
@@ -32,6 +37,10 @@ export default function Home() {
       <ComprehensiveResearch />
 
       <ComprehensiveServices />
+
+      <GoDeeper />
+
+      <TeamSection />
       {/* <div id="NOSOTROS">
         <Image src={Nosotros} alt="Economy" />
       </div> */}

@@ -1,5 +1,11 @@
 import Image from "next/image";
-import { Target, Handshake, Calendar, Landmark } from "lucide-react";
+import {
+  Target,
+  Handshake,
+  Calendar,
+  Landmark,
+  ChartNoAxesCombined,
+} from "lucide-react";
 import Bull from "@/public/bull.jpg";
 
 export default function EconomySection() {
@@ -37,8 +43,8 @@ export default function EconomySection() {
               <Landmark className="h-8 w-8" />
             </div>
             <div className="flex flex-col items-center flex-grow justify-center">
-              <h3 className="text-2xl font-semibold mb-4">
-                {/* Investigación {">"} Ventas */}
+              <h3 className="text-2xl font-semibold mb-4 text-center">
+                Macro-Economia
               </h3>
               <p className="mx-auto max-w-xs">
                 {/* This emphasis results in a candid and precise product. */}
@@ -51,28 +57,16 @@ export default function EconomySection() {
               <Handshake className="h-8 w-8" />
             </div>
             <div className="flex flex-col items-center flex-grow justify-center">
-              <h3 className="text-2xl font-semibold mb-4">
-                {/* Trusted By Decision Makers */}
-              </h3>
-              <p className="mx-auto max-w-xs">
-                {/* We serve some of the world s largest investment banks, wealth
-                managers, and family offices. */}
-              </p>
+              <h3 className="text-2xl font-semibold mb-4">Management</h3>
             </div>
           </div>
 
           <div className="flex flex-col items-center justify-between h-full">
             <div className="rounded-full bg-white/10 p-4 mb-6">
-              <Calendar className="h-8 w-8" />
+              <ChartNoAxesCombined className="h-8 w-8" />
             </div>
             <div className="flex flex-col items-center flex-grow justify-center">
-              <h3 className="text-2xl font-semibold mb-4">
-                {/* 150+ Years Experience */}
-              </h3>
-              <p className="mx-auto max-w-xs">
-                {/* We bring an in-depth understanding of global markets, politics,
-                and history to the research process. */}
-              </p>
+              <h3 className="text-2xl font-semibold mb-4">Investment</h3>
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ export default function FinancialSectorResponsibility() {
   return (
     <div
       ref={ref}
+      id="financial"
       className="relative h-[80%] w-full bg-black text-white py-16 px-4"
     >
       <div className="max-w-4xl mx-auto space-y-12">
