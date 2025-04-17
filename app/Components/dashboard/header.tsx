@@ -62,7 +62,7 @@ export function DashboardHeader() {
   // Obtener las iniciales para el fallback del avatar
   const initials = displayName
     .split(" ")
-    .map((n) => n[0])
+    .map((n: string) => n[0])
     .join("")
     .toUpperCase()
     .substring(0, 2)
