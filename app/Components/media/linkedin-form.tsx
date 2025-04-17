@@ -95,13 +95,12 @@ export function LinkedInForm({ onSuccess }: LinkedInFormProps) {
 
   const uploadImage = async (file: File, userId: string): Promise<string> => {
     try {
-      // Crear un nombre único para el archivo
+      // Crear un nombre único para el archivo (directamente en la raíz del bucket)
       const fileExt = file.name.split(".").pop()
       const fileName = `${userId}-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`
-      const filePath = `linkedin-thumbnails/${fileName}`
 
-      // Subir el archivo a Supabase Storage
-      const { error: uploadError, data } = await supabase.storage.from("media").upload(filePath, file, {
+      // Subir el archivo a Supabase Storage (directamente en la raíz)
+      const { error: uploadError, data } = await supabase.storage.from("media").upload(fileName, file, {
         cacheControl: "3600",
         upsert: false,
       })
@@ -113,7 +112,7 @@ export function LinkedInForm({ onSuccess }: LinkedInFormProps) {
       // Obtener la URL pública del archivo
       const {
         data: { publicUrl },
-      } = supabase.storage.from("media").getPublicUrl(filePath)
+      } = supabase.storage.from("media").getPublicUrl(fileName)
 
       return publicUrl
     } catch (error) {
