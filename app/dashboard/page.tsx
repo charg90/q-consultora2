@@ -1,17 +1,17 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { createClient } from "@/lib/supabase/client"
-
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { LogOut, Edit, Trash2, ExternalLink } from "lucide-react"
 import type { Database } from "@/lib/database.types"
-import { YouTubeForm } from "../Components/media/youtube-form"
+import { YouTubeEditForm,  } from "../Components/media/youtube-edit-form"
 import { LinkedInForm } from "../Components/media/linkedin-form"
-import { YouTubeEditForm } from "../Components/media/youtube-edit-form"
+import { StorageStats } from "../Components/dashboard/storage-stats"
 import { LinkedInEditForm } from "../Components/media/linkedin-edit-form"
-import { ConfirmDialog } from "@/components/ui/confirm-dialog"
+import { YouTubeForm } from "../Components/media/youtube-form"
 
 type YouTubeVideo = Database["public"]["Tables"]["youtube_videos"]["Row"]
 type LinkedInPost = Database["public"]["Tables"]["linkedin_posts"]["Row"]
@@ -33,52 +33,95 @@ export default function DashboardPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        // Verificar si el usuario está autenticado
-        const {
-          data: { session },
-        } = await supabase.auth.getSession()
+  // Función para cargar los datos
+  const loadData = useCallback(async () => {
+    try {
+      // Verificar si el usuario está autenticado
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
 
-        if (!session) {
-          router.push("/auth")
-          return
-        }
-
-        setUser(session.user)
-
-        // Obtener el perfil del usuario
-        const { data: profileData } = await supabase.from("profiles").select("*").eq("id", session.user.id).single()
-
-        setProfile(profileData)
-
-        // Obtener los videos del usuario
-        const { data: videosData } = await supabase
-          .from("youtube_videos")
-          .select("*")
-          .eq("user_id", session.user.id)
-          .order("created_at", { ascending: false })
-
-        setVideos(videosData || [])
-
-        // Obtener las publicaciones de LinkedIn del usuario
-        const { data: postsData } = await supabase
-          .from("linkedin_posts")
-          .select("*")
-          .eq("user_id", session.user.id)
-          .order("created_at", { ascending: false })
-
-        setLinkedinPosts(postsData || [])
-      } catch (error) {
-        console.error("Error loading data:", error)
-      } finally {
-        setLoading(false)
+      if (!session) {
+        router.push("/auth")
+        return
       }
-    }
 
-    loadData()
+      setUser(session.user)
+
+      // Obtener el perfil del usuario
+      const { data: profileData } = await supabase.from("profiles").select("*").eq("id", session.user.id).single()
+
+      setProfile(profileData)
+
+      // Obtener los videos del usuario
+      const { data: videosData } = await supabase
+        .from("youtube_videos")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .order("created_at", { ascending: false })
+
+      setVideos(videosData || [])
+
+      // Obtener las publicaciones de LinkedIn del usuario
+      const { data: postsData } = await supabase
+        .from("linkedin_posts")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .order("created_at", { ascending: false })
+
+      setLinkedinPosts(postsData || [])
+    } catch (error) {
+      console.error("Error loading data:", error)
+    } finally {
+      setLoading(false)
+    }
   }, [supabase, router])
+
+  // Función para recargar solo las publicaciones de LinkedIn
+  const reloadLinkedInPosts = useCallback(async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!session) return
+
+      const { data: postsData } = await supabase
+        .from("linkedin_posts")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .order("created_at", { ascending: false })
+
+      setLinkedinPosts(postsData || [])
+    } catch (error) {
+      console.error("Error reloading LinkedIn posts:", error)
+    }
+  }, [supabase])
+
+  // Función para recargar solo los videos de YouTube
+  const reloadYouTubeVideos = useCallback(async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!session) return
+
+      const { data: videosData } = await supabase
+        .from("youtube_videos")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .order("created_at", { ascending: false })
+
+      setVideos(videosData || [])
+    } catch (error) {
+      console.error("Error reloading YouTube videos:", error)
+    }
+  }, [supabase])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const handleDeleteVideo = async (videoId: number) => {
     try {
@@ -140,9 +183,16 @@ export default function DashboardPage() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <YouTubeForm />
-          <LinkedInForm />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div>
+            <YouTubeForm onSuccess={reloadYouTubeVideos} />
+          </div>
+          <div>
+            <LinkedInForm onSuccess={reloadLinkedInPosts} />
+          </div>
+          <div>
+            <StorageStats />
+          </div>
         </div>
 
         <div className="mb-12">
@@ -295,11 +345,21 @@ export default function DashboardPage() {
 
       {/* Modales de edición */}
       {editingVideo && (
-        <YouTubeEditForm video={editingVideo} isOpen={!!editingVideo} onClose={() => setEditingVideo(null)} />
+        <YouTubeEditForm
+          video={editingVideo}
+          isOpen={!!editingVideo}
+          onClose={() => setEditingVideo(null)}
+          onSuccess={reloadYouTubeVideos}
+        />
       )}
 
       {editingPost && (
-        <LinkedInEditForm post={editingPost} isOpen={!!editingPost} onClose={() => setEditingPost(null)} />
+        <LinkedInEditForm
+          post={editingPost}
+          isOpen={!!editingPost}
+          onClose={() => setEditingPost(null)}
+          onSuccess={reloadLinkedInPosts}
+        />
       )}
 
       {/* Diálogos de confirmación para eliminar */}

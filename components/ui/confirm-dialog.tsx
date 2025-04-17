@@ -1,14 +1,15 @@
 "use client"
+
+import { useState } from "react"
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 
 interface ConfirmDialogProps {
   isOpen: boolean
@@ -18,6 +19,7 @@ interface ConfirmDialogProps {
   description: string
   confirmText?: string
   cancelText?: string
+  loading?: boolean
 }
 
 export function ConfirmDialog({
@@ -26,23 +28,38 @@ export function ConfirmDialog({
   onConfirm,
   title,
   description,
-  confirmText = "Eliminar",
+  confirmText = "Confirmar",
   cancelText = "Cancelar",
+  loading = false,
 }: ConfirmDialogProps) {
+  const [isLoading, setIsLoading] = useState(loading)
+
+  const handleConfirm = async () => {
+    setIsLoading(true)
+    try {
+      await onConfirm()
+    } finally {
+      setIsLoading(false)
+      onClose()
+    }
+  }
+
   return (
-    <AlertDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{cancelText}</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm} className="bg-red-500 hover:bg-red-600">
-            {confirmText}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose} disabled={isLoading}>
+            {cancelText}
+          </Button>
+          <Button variant="destructive" onClick={handleConfirm} disabled={isLoading}>
+            {isLoading ? "Procesando..." : confirmText}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
