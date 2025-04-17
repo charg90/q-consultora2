@@ -13,14 +13,14 @@ export default async function News() {
     .from("youtube_videos")
     .select("*")
     .order("created_at", { ascending: false })
-    .limit(4)
+
 
   // Obtener las publicaciones de LinkedIn de la base de datos
   const { data: linkedinPosts } = await supabase
     .from("linkedin_posts")
     .select("*")
     .order("created_at", { ascending: false })
-    .limit(6)
+
 
   return (
     <div className="relative min-h-screen w-full bg-gradient-to-br from-black via-zinc-900 to-black overflow-hidden">
