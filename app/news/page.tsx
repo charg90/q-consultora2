@@ -1,7 +1,9 @@
-import { ExternalLink, Play, Linkedin } from "lucide-react"
+import { ExternalLink, Play, Linkedin, Newspaper } from "lucide-react"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
+
 import BackgroundImage from "../../public/backgound-wall-street.jpeg"
+import { AuthorDisplay } from "../Components/user/author-display"
 
 export default async function News() {
   const supabase = createClient()
@@ -73,6 +75,9 @@ export default async function News() {
                       {video.description && (
                         <p className="text-gray-300 text-sm mt-1 line-clamp-2">{video.description}</p>
                       )}
+                      <div className="mt-2">
+                        <AuthorDisplay userId={video.user_id || ""} createdAt={video.created_at} size="sm" />
+                      </div>
                     </div>
                   </div>
                   <div className="aspect-video w-full overflow-hidden">
@@ -97,8 +102,8 @@ export default async function News() {
         {/* LinkedIn Section */}
         <div>
           <h3 className="text-2xl font-bold mb-6 flex items-center text-gray-200">
-            <Linkedin className="w-6 h-6 mr-2 text-gray-400" />
-            <span>Informes</span>
+          <Newspaper className="w-6 h-6 mr-2 text-gray-400" />
+            <span>Informes y Noticias</span>
           </h3>
           {linkedinPosts && linkedinPosts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -116,17 +121,18 @@ export default async function News() {
                         src={post.thumbnail_url || "/placeholder.svg"}
                         alt={post.title || "Publicación de LinkedIn"}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    
+                   
                       />
                     </div>
                   )}
                   <div className="flex items-center mb-3">
-                    <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center mr-3">
-                      <Linkedin className="w-5 h-5 text-gray-300" />
-                    </div>
+                  
                     <span className="font-semibold text-gray-200">{post.title || `Publicación #${post.id}`}</span>
                   </div>
                   {post.description && <p className="text-gray-400 mb-3 text-sm line-clamp-3">{post.description}</p>}
+                  <div className="mt-2 mb-3">
+                    <AuthorDisplay userId={post.user_id || ""} createdAt={post.created_at} size="sm" />
+                  </div>
                   <div className="mt-auto flex items-center text-gray-300 font-medium group-hover:underline">
                     <span>Ver publicación</span>
                     <ExternalLink className="w-4 h-4 ml-1" />

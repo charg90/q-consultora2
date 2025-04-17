@@ -2,16 +2,20 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { createClient } from "@/lib/supabase/client"
+
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
+
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-import { LogOut, Edit, Trash2, ExternalLink } from "lucide-react"
+import { Edit, Trash2, ExternalLink } from "lucide-react"
 import type { Database } from "@/lib/database.types"
-import { YouTubeEditForm,  } from "../Components/media/youtube-edit-form"
+import { YouTubeForm } from "../Components/media/youtube-form"
 import { LinkedInForm } from "../Components/media/linkedin-form"
 import { StorageStats } from "../Components/dashboard/storage-stats"
+import { YouTubeEditForm } from "../Components/media/youtube-edit-form"
 import { LinkedInEditForm } from "../Components/media/linkedin-edit-form"
-import { YouTubeForm } from "../Components/media/youtube-form"
+import { AuthorDisplay } from "../Components/user/author-display"
+import { DashboardHeader } from "../Components/dashboard/header"
 
 type YouTubeVideo = Database["public"]["Tables"]["youtube_videos"]["Row"]
 type LinkedInPost = Database["public"]["Tables"]["linkedin_posts"]["Row"]
@@ -157,11 +161,6 @@ export default function DashboardPage() {
     }
   }
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push("/auth")
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-800 via-zinc-900 to-slate-900 flex items-center justify-center">
@@ -172,15 +171,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 via-zinc-900 to-slate-900">
-      <header className="bg-black/50 backdrop-blur-sm border-b border-white/10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-white">Panel de Control</h1>
-          <Button variant="ghost" className="text-white" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4 mr-2" />
-            Cerrar Sesión
-          </Button>
-        </div>
-      </header>
+      <DashboardHeader />
 
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -218,6 +209,9 @@ export default function DashboardPage() {
                     {video.description && (
                       <p className="text-gray-400 text-sm mb-4 line-clamp-2">{video.description}</p>
                     )}
+                    <div className="mb-4">
+                      <AuthorDisplay userId={video.user_id || ""} createdAt={video.created_at} size="sm" />
+                    </div>
                     <div className="flex justify-between items-center">
                       <a
                         href={`https://www.youtube.com/watch?v=${video.youtube_id}${video.start_time ? `&t=${video.start_time}` : ""}`}
@@ -280,28 +274,13 @@ export default function DashboardPage() {
                     </div>
                   )}
                   <div className="p-4">
-                    <div className="flex items-center mb-3">
-                      <div className="w-8 h-8 rounded-full bg-[#0A66C2] flex items-center justify-center mr-3">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="text-white"
-                        >
-                          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                          <rect width="4" height="12" x="2" y="9"></rect>
-                          <circle cx="4" cy="4" r="2"></circle>
-                        </svg>
-                      </div>
+                    <div className="mb-3">
                       <span className="font-semibold text-white">{post.title || "Publicación de LinkedIn"}</span>
                     </div>
                     {post.description && <p className="text-gray-400 mb-3 text-sm line-clamp-3">{post.description}</p>}
+                    <div className="mb-4">
+                      <AuthorDisplay userId={post.user_id || ""} createdAt={post.created_at} size="sm" />
+                    </div>
                     <div className="flex justify-between items-center">
                       <a
                         href={post.linkedin_url}
