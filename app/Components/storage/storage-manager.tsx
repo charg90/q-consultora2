@@ -1,13 +1,18 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Trash2, RefreshCw, ExternalLink, AlertCircle } from "lucide-react"
+import { Trash2, RefreshCw, ExternalLink, AlertCircle, Eye, ImageIcon, FileIcon, Search } from "lucide-react"
 import { formatFileSize } from "@/utils/image-compression"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { toast } from "@/hooks/use-toast"
+import { Input } from "@/components/ui/input"
 
 type StorageFile = {
   name: string
@@ -43,6 +48,9 @@ export function StorageManager() {
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState("all")
+  const [previewFile, setPreviewFile] = useState<StorageFile | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filteredFiles, setFilteredFiles] = useState<StorageFile[]>([])
 
   const supabase = createClient()
 
@@ -52,8 +60,12 @@ export function StorageManager() {
       setLoading(true)
       setError(null)
 
-      // Obtener lista de archivos
-      const { data: fileList, error: fileError } = await supabase.storage.from("media").list()
+      // Obtener lista de archivos (recursivo para incluir subcarpetas)
+      const { data: fileList, error: fileError } = await supabase.storage.from("media").list("", {
+        limit: 1000,
+        offset: 0,
+        sortBy: { column: "created_at", order: "desc" },
+      })
 
       if (fileError) {
         throw new Error(fileError.message)
@@ -78,6 +90,7 @@ export function StorageManager() {
       })
 
       setFiles(filesWithMetadata)
+      setFilteredFiles(filesWithMetadata)
 
       // Calcular estadísticas
       const totalSize = filesWithMetadata.reduce((sum, file) => sum + (file.metadata?.size || 0), 0)
@@ -97,6 +110,20 @@ export function StorageManager() {
       setLoading(false)
     }
   }
+
+  // Filtrar archivos según el término de búsqueda
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setFilteredFiles(files)
+    } else {
+      const term = searchTerm.toLowerCase()
+      const filtered = files.filter(
+        (file) =>
+          file.name.toLowerCase().includes(term) || (file.metadata?.mimetype || "").toLowerCase().includes(term),
+      )
+      setFilteredFiles(filtered)
+    }
+  }, [searchTerm, files])
 
   // Identificar archivos que no están siendo utilizados en ninguna publicación
   const findUnusedFiles = async (filesList: StorageFile[]) => {
@@ -120,30 +147,170 @@ export function StorageManager() {
     }
   }
 
+  // Verificar si un archivo está siendo utilizado en la base de datos
+  const isFileInUse = async (fileUrl: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase.from("linkedin_posts").select("id").eq("thumbnail_url", fileUrl).limit(1)
+
+      if (error) throw error
+
+      return data && data.length > 0
+    } catch (err) {
+      console.error("Error al verificar si el archivo está en uso:", err)
+      return false
+    }
+  }
+
   // Eliminar un archivo
   const deleteFile = async (file: StorageFile) => {
     try {
       setDeleteLoading(true)
-      const { error: deleteError } = await supabase.storage.from("media").remove([file.name])
+      setError(null)
 
-      if (deleteError) throw new Error(deleteError.message)
+      console.log("Intentando eliminar archivo:", file.name)
 
-      // Actualizar la lista de archivos
-      setFiles(files.filter((f) => f.id !== file.id))
-      setUnusedFiles(unusedFiles.filter((f) => f.id !== file.id))
+      // Verificar si el archivo está siendo utilizado
+      const inUse = await isFileInUse(file.publicUrl)
 
-      // Actualizar estadísticas
-      setStats({
-        ...stats,
-        size: stats.size - (file.metadata?.size || 0),
-        count: stats.count - 1,
-        usage: ((stats.size - (file.metadata?.size || 0)) / stats.limit) * 100,
+      if (inUse) {
+        // Si el archivo está en uso, primero eliminamos la referencia en la base de datos
+        console.log("El archivo está en uso. Actualizando referencia en la base de datos...")
+
+        const { error: dbUpdateError } = await supabase
+          .from("linkedin_posts")
+          .update({ thumbnail_url: null })
+          .eq("thumbnail_url", file.publicUrl)
+
+        if (dbUpdateError) {
+          console.error("Error al actualizar registros en la base de datos:", dbUpdateError)
+          throw new Error("No se pudo actualizar la referencia en la base de datos: " + dbUpdateError.message)
+        }
+
+        // Esperar un momento para que la actualización se propague
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        console.log("Referencia en la base de datos actualizada correctamente")
+
+        // Verificar que la actualización fue exitosa
+        const stillInUse = await isFileInUse(file.publicUrl)
+        if (stillInUse) {
+          console.error("La referencia en la base de datos no se actualizó correctamente")
+          throw new Error("No se pudo eliminar la referencia en la base de datos después de varios intentos")
+        }
+      }
+
+      // Ahora eliminamos el archivo del storage usando la API directa
+      console.log("Eliminando archivo del storage:", file.name)
+
+      // Extraer la ruta correcta del archivo (sin el bucket)
+      const filePath = file.name
+
+      // Usar el método remove con la ruta correcta
+      const { error: deleteError } = await supabase.storage.from("media").remove([filePath])
+
+      if (deleteError) {
+        console.error("Error al eliminar archivo del storage:", deleteError)
+        throw new Error("Error al eliminar archivo del storage: " + deleteError.message)
+      }
+
+      console.log("Archivo eliminado correctamente del storage")
+
+      // Mostrar notificación de éxito
+      toast({
+        title: "Archivo eliminado",
+        description: `El archivo "${file.name}" ha sido eliminado correctamente.`,
       })
 
+      // Actualizar la interfaz de usuario inmediatamente
+      setFiles((prevFiles) => prevFiles.filter((f) => f.id !== file.id))
+      setUnusedFiles((prevUnused) => prevUnused.filter((f) => f.id !== file.id))
+      setFilteredFiles((prevFiltered) => prevFiltered.filter((f) => f.id !== file.id))
+
+      // Actualizar estadísticas
+      setStats((prevStats) => ({
+        ...prevStats,
+        size: prevStats.size - (file.metadata?.size || 0),
+        count: prevStats.count - 1,
+        usage: ((prevStats.size - (file.metadata?.size || 0)) / prevStats.limit) * 100,
+      }))
+
       setFileToDelete(null)
+
+      // Recargar la lista de archivos después de un breve retraso
+      setTimeout(() => {
+        loadFiles()
+      }, 5000) // Aumentamos el tiempo de espera para asegurar que los cambios se propaguen
     } catch (err) {
       console.error("Error al eliminar archivo:", err)
       setError(err instanceof Error ? err.message : "Error al eliminar archivo")
+
+      toast({
+        title: "Error al eliminar",
+        description: err instanceof Error ? err.message : "Error al eliminar archivo",
+        variant: "destructive",
+      })
+    } finally {
+      setDeleteLoading(false)
+    }
+  }
+
+  // Forzar la eliminación de un archivo (sin verificar si está en uso)
+  const forceDeleteFile = async (file: StorageFile) => {
+    try {
+      setDeleteLoading(true)
+      setError(null)
+
+      console.log("Forzando eliminación del archivo:", file.name)
+
+      // Primero intentamos actualizar todas las referencias en la base de datos
+      const { error: dbUpdateError } = await supabase
+        .from("linkedin_posts")
+        .update({ thumbnail_url: null })
+        .eq("thumbnail_url", file.publicUrl)
+
+      if (dbUpdateError) {
+        console.error("Error al actualizar registros en la base de datos:", dbUpdateError)
+        // Continuamos con la eliminación aunque haya error en la actualización
+      }
+
+      // Esperar un momento para que la actualización se propague
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      // Eliminar el archivo del storage
+      const { error: deleteError } = await supabase.storage.from("media").remove([file.name])
+
+      if (deleteError) {
+        console.error("Error al eliminar archivo del storage:", deleteError)
+        throw new Error("Error al eliminar archivo del storage: " + deleteError.message)
+      }
+
+      console.log("Archivo eliminado correctamente del storage")
+
+      toast({
+        title: "Archivo eliminado forzosamente",
+        description: `El archivo "${file.name}" ha sido eliminado correctamente.`,
+      })
+
+      // Actualizar la interfaz de usuario inmediatamente
+      setFiles((prevFiles) => prevFiles.filter((f) => f.id !== file.id))
+      setUnusedFiles((prevUnused) => prevUnused.filter((f) => f.id !== file.id))
+      setFilteredFiles((prevFiltered) => prevFiltered.filter((f) => f.id !== file.id))
+
+      setFileToDelete(null)
+
+      // Recargar la lista de archivos después de un breve retraso
+      setTimeout(() => {
+        loadFiles()
+      }, 5000)
+    } catch (err) {
+      console.error("Error al forzar eliminación:", err)
+      setError(err instanceof Error ? err.message : "Error al forzar eliminación")
+
+      toast({
+        title: "Error al eliminar",
+        description: err instanceof Error ? err.message : "Error al forzar eliminación",
+        variant: "destructive",
+      })
     } finally {
       setDeleteLoading(false)
     }
@@ -153,32 +320,107 @@ export function StorageManager() {
   const deleteAllUnused = async () => {
     try {
       setDeleteLoading(true)
+      setError(null)
+
       const filesToDelete = unusedFiles.map((file) => file.name)
 
       if (filesToDelete.length === 0) return
 
-      const { error: deleteError } = await supabase.storage.from("media").remove(filesToDelete)
+      console.log("Intentando eliminar archivos no utilizados:", filesToDelete)
 
-      if (deleteError) throw new Error(deleteError.message)
+      // Eliminar los archivos uno por uno para mayor fiabilidad
+      let successCount = 0
+      let errorCount = 0
 
-      // Actualizar la lista de archivos
-      const deletedIds = new Set(unusedFiles.map((file) => file.id))
-      setFiles(files.filter((file) => !deletedIds.has(file.id)))
-      setUnusedFiles([])
+      for (const fileName of filesToDelete) {
+        try {
+          const { error } = await supabase.storage.from("media").remove([fileName])
 
-      // Actualizar estadísticas
-      const deletedSize = unusedFiles.reduce((sum, file) => sum + (file.metadata?.size || 0), 0)
-      setStats({
-        ...stats,
-        size: stats.size - deletedSize,
-        count: stats.count - unusedFiles.length,
-        usage: ((stats.size - deletedSize) / stats.limit) * 100,
-      })
+          if (error) {
+            console.error(`Error al eliminar archivo ${fileName}:`, error)
+            errorCount++
+          } else {
+            successCount++
+          }
+        } catch (err) {
+          console.error(`Error al eliminar archivo ${fileName}:`, err)
+          errorCount++
+        }
+
+        // Pequeña pausa entre eliminaciones para no sobrecargar la API
+        await new Promise((resolve) => setTimeout(resolve, 500))
+      }
+
+      // Mostrar notificación de éxito/error
+      if (successCount > 0) {
+        toast({
+          title: "Archivos eliminados",
+          description: `Se han eliminado ${successCount} archivos no utilizados${errorCount > 0 ? ` (${errorCount} errores)` : ""}.`,
+        })
+      } else if (errorCount > 0) {
+        toast({
+          title: "Error al eliminar archivos",
+          description: `No se pudo eliminar ningún archivo. Ocurrieron ${errorCount} errores.`,
+          variant: "destructive",
+        })
+      }
+
+      // Actualizar la interfaz de usuario
+      if (successCount > 0) {
+        // Actualizar la lista de archivos
+        const deletedIds = new Set(unusedFiles.map((file) => file.id))
+        setFiles((prevFiles) => prevFiles.filter((file) => !deletedIds.has(file.id)))
+        setFilteredFiles((prevFiltered) => prevFiltered.filter((file) => !deletedIds.has(file.id)))
+        setUnusedFiles([])
+
+        // Actualizar estadísticas
+        const deletedSize = unusedFiles.reduce((sum, file) => sum + (file.metadata?.size || 0), 0)
+        setStats((prevStats) => ({
+          ...prevStats,
+          size: prevStats.size - deletedSize,
+          count: prevStats.count - unusedFiles.length,
+          usage: ((prevStats.size - deletedSize) / prevStats.limit) * 100,
+        }))
+      }
+
+      // Recargar la lista de archivos para asegurarnos de que está actualizada
+      setTimeout(() => {
+        loadFiles()
+      }, 5000)
     } catch (err) {
       console.error("Error al eliminar archivos no utilizados:", err)
       setError(err instanceof Error ? err.message : "Error al eliminar archivos no utilizados")
+
+      toast({
+        title: "Error al eliminar",
+        description: err instanceof Error ? err.message : "Error al eliminar archivos no utilizados",
+        variant: "destructive",
+      })
     } finally {
       setDeleteLoading(false)
+    }
+  }
+
+  // Verificar si un archivo es una imagen
+  const isImageFile = (file: StorageFile) => {
+    const mimeType = file.metadata?.mimetype || ""
+    return mimeType.startsWith("image/")
+  }
+
+  // Obtener el tipo de archivo para mostrar el icono adecuado
+  const getFileTypeIcon = (file: StorageFile) => {
+    const mimeType = file.metadata?.mimetype || ""
+
+    if (mimeType.startsWith("image/")) {
+      return <ImageIcon className="h-6 w-6 text-blue-400" />
+    } else if (mimeType.startsWith("video/")) {
+      return <FileIcon className="h-6 w-6 text-purple-400" />
+    } else if (mimeType.startsWith("audio/")) {
+      return <FileIcon className="h-6 w-6 text-green-400" />
+    } else if (mimeType.startsWith("application/pdf")) {
+      return <FileIcon className="h-6 w-6 text-red-400" />
+    } else {
+      return <FileIcon className="h-6 w-6 text-gray-400" />
     }
   }
 
@@ -186,7 +428,7 @@ export function StorageManager() {
     loadFiles()
   }, [])
 
-  const displayFiles = activeTab === "unused" ? unusedFiles : files
+  const displayFiles = activeTab === "unused" ? unusedFiles : filteredFiles
 
   return (
     <Card className="w-full">
@@ -219,6 +461,20 @@ export function StorageManager() {
                 {formatFileSize(stats.size)} de {formatFileSize(stats.limit)} ({stats.usage.toFixed(1)}%)
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Barra de búsqueda */}
+        <div className="mb-4">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              type="text"
+              placeholder="Buscar archivos..."
+              className="pl-9"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
 
@@ -264,10 +520,24 @@ export function StorageManager() {
 
           <TabsContent value="all" className="m-0">
             <FileGrid
-              files={files}
+              files={filteredFiles}
               loading={loading}
               onDelete={(file) => setFileToDelete(file)}
-              emptyMessage="No hay archivos almacenados"
+              onForceDelete={(file) => {
+                if (
+                  confirm(
+                    `¿Estás seguro de que deseas forzar la eliminación de "${file.name}"? Esta acción es irreversible.`,
+                  )
+                ) {
+                  forceDeleteFile(file)
+                }
+              }}
+              onPreview={(file) => setPreviewFile(file)}
+              isImageFile={isImageFile}
+              getFileTypeIcon={getFileTypeIcon}
+              emptyMessage={
+                searchTerm ? "No se encontraron archivos que coincidan con la búsqueda" : "No hay archivos almacenados"
+              }
             />
           </TabsContent>
 
@@ -276,6 +546,18 @@ export function StorageManager() {
               files={unusedFiles}
               loading={loading}
               onDelete={(file) => setFileToDelete(file)}
+              onForceDelete={(file) => {
+                if (
+                  confirm(
+                    `¿Estás seguro de que deseas forzar la eliminación de "${file.name}"? Esta acción es irreversible.`,
+                  )
+                ) {
+                  forceDeleteFile(file)
+                }
+              }}
+              onPreview={(file) => setPreviewFile(file)}
+              isImageFile={isImageFile}
+              getFileTypeIcon={getFileTypeIcon}
               emptyMessage="No hay archivos sin utilizar"
             />
           </TabsContent>
@@ -304,6 +586,51 @@ export function StorageManager() {
           cancelText="Cancelar"
         />
       )}
+
+      {/* Diálogo de vista previa de imagen */}
+      {previewFile && (
+        <Dialog open={!!previewFile} onOpenChange={() => setPreviewFile(null)}>
+          <DialogContent className="sm:max-w-3xl">
+            <DialogHeader>
+              <DialogTitle>{previewFile.name}</DialogTitle>
+            </DialogHeader>
+            <div className="mt-4 flex flex-col items-center">
+              {isImageFile(previewFile) ? (
+                <div className="relative w-full max-h-[70vh] overflow-auto">
+                  <img
+                    src={previewFile.publicUrl || "/placeholder.svg"}
+                    alt={previewFile.name}
+                    className="max-w-full h-auto mx-auto"
+                    onError={(e) => {
+                      e.currentTarget.src = "/generic-placeholder-image.png"
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-8">
+                  {getFileTypeIcon(previewFile)}
+                  <p className="mt-4 text-gray-400">
+                    Este tipo de archivo ({previewFile.metadata?.mimetype || "desconocido"}) no se puede previsualizar.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="mt-4"
+                    onClick={() => window.open(previewFile.publicUrl, "_blank")}
+                  >
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Abrir archivo
+                  </Button>
+                </div>
+              )}
+              <div className="mt-4 w-full flex justify-between items-center text-sm text-gray-400">
+                <span>Tamaño: {formatFileSize(previewFile.metadata?.size || 0)}</span>
+                <span>Tipo: {previewFile.metadata?.mimetype || "Desconocido"}</span>
+                <span>Creado: {new Date(previewFile.created_at).toLocaleString()}</span>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </Card>
   )
 }
@@ -313,11 +640,19 @@ function FileGrid({
   files,
   loading,
   onDelete,
+  onForceDelete,
+  onPreview,
+  isImageFile,
+  getFileTypeIcon,
   emptyMessage,
 }: {
   files: StorageFile[]
   loading: boolean
   onDelete: (file: StorageFile) => void
+  onForceDelete: (file: StorageFile) => void
+  onPreview: (file: StorageFile) => void
+  isImageFile: (file: StorageFile) => boolean
+  getFileTypeIcon: (file: StorageFile) => React.ReactNode
   emptyMessage: string
 }) {
   if (loading) {
@@ -343,8 +678,8 @@ function FileGrid({
           key={file.id}
           className="bg-zinc-900/80 backdrop-blur-md rounded-lg border border-zinc-800 overflow-hidden group"
         >
-          <div className="aspect-square w-full overflow-hidden relative">
-            {file.metadata?.mimetype?.startsWith("image/") ? (
+          <div className="aspect-square w-full overflow-hidden relative cursor-pointer" onClick={() => onPreview(file)}>
+            {isImageFile(file) ? (
               <img
                 src={file.publicUrl || "/placeholder.svg"}
                 alt={file.name}
@@ -354,8 +689,11 @@ function FileGrid({
                 }}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-zinc-800">
-                <p className="text-gray-400 text-sm">{file.metadata?.mimetype || "Archivo desconocido"}</p>
+              <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-800 p-4">
+                {getFileTypeIcon(file)}
+                <p className="text-gray-400 text-sm mt-2 text-center break-all">
+                  {file.metadata?.mimetype || "Archivo desconocido"}
+                </p>
               </div>
             )}
             <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -363,12 +701,35 @@ function FileGrid({
                 variant="secondary"
                 size="icon"
                 className="h-8 w-8"
-                onClick={() => window.open(file.publicUrl, "_blank")}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onPreview(file)
+                }}
               >
-                <ExternalLink className="h-4 w-4" />
+                <Eye className="h-4 w-4" />
                 <span className="sr-only">Ver</span>
               </Button>
-              <Button variant="destructive" size="icon" className="h-8 w-8" onClick={() => onDelete(file)}>
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-8 w-8"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  window.open(file.publicUrl, "_blank")
+                }}
+              >
+                <ExternalLink className="h-4 w-4" />
+                <span className="sr-only">Abrir</span>
+              </Button>
+              <Button
+                variant="destructive"
+                size="icon"
+                className="h-8 w-8"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDelete(file)
+                }}
+              >
                 <Trash2 className="h-4 w-4" />
                 <span className="sr-only">Eliminar</span>
               </Button>
@@ -380,7 +741,18 @@ function FileGrid({
             </p>
             <div className="flex justify-between items-center mt-1">
               <p className="text-xs text-gray-400">{formatFileSize(file.metadata?.size || 0)}</p>
-              <p className="text-xs text-gray-400">{new Date(file.created_at).toLocaleDateString()}</p>
+              <div className="flex items-center gap-1">
+                <p className="text-xs text-gray-400">{new Date(file.created_at).toLocaleDateString()}</p>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-red-500 hover:text-red-400"
+                  title="Forzar eliminación"
+                  onClick={() => onForceDelete(file)}
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
