@@ -259,7 +259,7 @@ export function StorageManager() {
     try {
       setDeleteLoading(true)
       setError(null)
-
+      
       console.log("Forzando eliminación del archivo:", file.name)
 
       // Primero intentamos actualizar todas las referencias en la base de datos
