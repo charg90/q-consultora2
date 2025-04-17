@@ -1,5 +1,7 @@
 "use client"
 
+import { CardFooter } from "@/components/ui/card"
+
 import type React from "react"
 
 import { useState } from "react"
@@ -7,11 +9,15 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 
-export function YouTubeForm() {
+interface YouTubeFormProps {
+  onSuccess?: () => void
+}
+
+export function YouTubeForm({ onSuccess }: YouTubeFormProps) {
   const [youtubeId, setYoutubeId] = useState("")
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
@@ -69,12 +75,16 @@ export function YouTubeForm() {
       if (insertError) {
         setError(insertError.message)
       } else {
-        // Redirigir o mostrar mensaje de éxito
-        router.refresh()
+        // Limpiar el formulario
         setYoutubeId("")
         setTitle("")
         setDescription("")
         setStartTime(0)
+
+        // Llamar a la función de éxito si existe
+        if (onSuccess) {
+          onSuccess()
+        }
       }
     } catch (err) {
       console.error("Error al agregar video:", err)
@@ -85,7 +95,7 @@ export function YouTubeForm() {
   }
 
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Agregar Video de YouTube</CardTitle>
         <CardDescription>Añade un nuevo video de YouTube a tu colección</CardDescription>

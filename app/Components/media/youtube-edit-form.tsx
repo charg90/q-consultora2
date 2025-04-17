@@ -6,16 +6,8 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { useRouter } from "next/navigation"
 import type { Database } from "@/lib/database.types"
 
 type YouTubeVideo = Database["public"]["Tables"]["youtube_videos"]["Row"]
@@ -24,27 +16,26 @@ interface YouTubeEditFormProps {
   video: YouTubeVideo
   isOpen: boolean
   onClose: () => void
+  onSuccess?: () => void
 }
 
-export function YouTubeEditForm({ video, isOpen, onClose }: YouTubeEditFormProps) {
+export function YouTubeEditForm({ video, isOpen, onClose, onSuccess }: YouTubeEditFormProps) {
   const [youtubeId, setYoutubeId] = useState(video.youtube_id)
   const [title, setTitle] = useState(video.title)
   const [description, setDescription] = useState(video.description || "")
   const [startTime, setStartTime] = useState(video.start_time || 0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+
   const supabase = createClient()
 
+  // Actualizar los estados cuando cambia el video
   useEffect(() => {
-    if (isOpen) {
-      setYoutubeId(video.youtube_id)
-      setTitle(video.title)
-      setDescription(video.description || "")
-      setStartTime(video.start_time || 0)
-      setError(null)
-    }
-  }, [isOpen, video])
+    setYoutubeId(video.youtube_id)
+    setTitle(video.title)
+    setDescription(video.description || "")
+    setStartTime(video.start_time || 0)
+  }, [video])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -52,6 +43,16 @@ export function YouTubeEditForm({ video, isOpen, onClose }: YouTubeEditFormProps
     setError(null)
 
     try {
+      // Obtener el usuario actual
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (!user) {
+        setError("Debes iniciar sesión para editar videos")
+        return
+      }
+
       // Extraer el ID de YouTube si se proporciona una URL completa
       let videoId = youtubeId
       if (youtubeId.includes("youtube.com") || youtubeId.includes("youtu.be")) {
@@ -87,7 +88,10 @@ export function YouTubeEditForm({ video, isOpen, onClose }: YouTubeEditFormProps
       if (updateError) {
         setError(updateError.message)
       } else {
-        router.refresh()
+        // Llamar a la función de éxito si existe
+        if (onSuccess) {
+          onSuccess()
+        }
         onClose()
       }
     } catch (err) {
@@ -99,18 +103,17 @@ export function YouTubeEditForm({ video, isOpen, onClose }: YouTubeEditFormProps
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Editar Video de YouTube</DialogTitle>
-          <DialogDescription>Actualiza la información del video</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="edit-youtube-id">ID o URL de YouTube</Label>
+              <Label htmlFor="youtube-id-edit">ID o URL de YouTube</Label>
               <Input
-                id="edit-youtube-id"
+                id="youtube-id-edit"
                 placeholder="https://www.youtube.com/watch?v=XXXX o XXXX"
                 value={youtubeId}
                 onChange={(e) => setYoutubeId(e.target.value)}
@@ -118,9 +121,9 @@ export function YouTubeEditForm({ video, isOpen, onClose }: YouTubeEditFormProps
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="edit-title">Título</Label>
+              <Label htmlFor="title-edit">Título</Label>
               <Input
-                id="edit-title"
+                id="title-edit"
                 placeholder="Título del video"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -128,9 +131,9 @@ export function YouTubeEditForm({ video, isOpen, onClose }: YouTubeEditFormProps
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="edit-description">Descripción</Label>
+              <Label htmlFor="description-edit">Descripción</Label>
               <Textarea
-                id="edit-description"
+                id="description-edit"
                 placeholder="Descripción del video"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -138,9 +141,9 @@ export function YouTubeEditForm({ video, isOpen, onClose }: YouTubeEditFormProps
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="edit-start-time">Tiempo de inicio (segundos)</Label>
+              <Label htmlFor="start-time-edit">Tiempo de inicio (segundos)</Label>
               <Input
-                id="edit-start-time"
+                id="start-time-edit"
                 type="number"
                 min="0"
                 value={startTime}
@@ -150,7 +153,7 @@ export function YouTubeEditForm({ video, isOpen, onClose }: YouTubeEditFormProps
             {error && <p className="text-sm text-red-500">{error}</p>}
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
               Cancelar
             </Button>
             <Button type="submit" disabled={loading}>
