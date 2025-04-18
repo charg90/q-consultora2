@@ -12,6 +12,7 @@ export interface Database {
           website: string | null
           created_at: string
           updated_at: string
+          default_role_id: number | null
         }
         Insert: {
           id: string
@@ -21,6 +22,7 @@ export interface Database {
           website?: string | null
           created_at?: string
           updated_at?: string
+          default_role_id?: number | null
         }
         Update: {
           id?: string
@@ -30,6 +32,7 @@ export interface Database {
           website?: string | null
           created_at?: string
           updated_at?: string
+          default_role_id?: number | null
         }
       }
       youtube_videos: {
@@ -119,6 +122,34 @@ export interface Database {
           created_at?: string
         }
       }
+      video_categories: {
+        Row: {
+          video_id: number
+          category_id: number
+        }
+        Insert: {
+          video_id: number
+          category_id: number
+        }
+        Update: {
+          video_id?: number
+          category_id?: number
+        }
+      }
+      post_categories: {
+        Row: {
+          post_id: number
+          category_id: number
+        }
+        Insert: {
+          post_id: number
+          category_id: number
+        }
+        Update: {
+          post_id?: number
+          category_id?: number
+        }
+      }
       favorites: {
         Row: {
           id: number
@@ -142,6 +173,81 @@ export interface Database {
           created_at?: string
         }
       }
+      // Nuevas tablas para el sistema de roles
+      roles: {
+        Row: {
+          id: number
+          name: string
+          description: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          name: string
+          description?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          name?: string
+          description?: string | null
+          created_at?: string
+        }
+      }
+      user_roles: {
+        Row: {
+          id: number
+          user_id: string
+          role_id: number
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          user_id: string
+          role_id: number
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          user_id?: string
+          role_id?: number
+          created_at?: string
+        }
+      }
+    }
+    Functions: {
+      user_has_role: {
+        Args: {
+          user_id: string
+          role_name: string
+        }
+        Returns: boolean
+      }
+      get_user_roles: {
+        Args: {
+          user_id: string
+        }
+        Returns: {
+          id: number
+          name: string
+          description: string | null
+          created_at: string
+        }[]
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
     }
   }
 }
+
+export type Tables<T extends keyof Database["public"]["Tables"]> = Database["public"]["Tables"][T]["Row"]
+export type Enums<T extends keyof Database["public"]["Enums"]> = Database["public"]["Enums"][T]
+export type Functions<T extends keyof Database["public"]["Functions"]> = Database["public"]["Functions"][T]
+
+// Tipos de ayuda para roles
+export type Role = Database["public"]["Tables"]["roles"]["Row"]
+export type UserRole = Database["public"]["Tables"]["user_roles"]["Row"]
