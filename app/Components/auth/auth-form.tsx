@@ -121,6 +121,7 @@ export function AuthForm() {
           data: {
             full_name: fullName || null,
             username: username || null,
+
           },
         },
       })
@@ -150,6 +151,7 @@ export function AuthForm() {
           .update({
             avatar_url: avatarUrl,
             updated_at: new Date().toISOString(),
+            default_role_id: 2
           })
           .eq("id", authData.user.id)
 
