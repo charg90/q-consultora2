@@ -48,13 +48,13 @@ export default function ComprehensiveServices() {
       ],
     },
     {
-      title: "Servicios Macro-Economicos",
+      title: "Economia",
       icon: Brain,
       items: [
         "Workshops y Capacitaciones",
-        "Optimizacion Procesos Productivos y Administrativos",
-        "Implementacion y Seguimiento de Sistemas de Gestion",
-        "Management Development",
+        "Newsletters ",
+        "Inteligencia Macro-Economica Avanzada",
+        "Plan estrategico de Competitividad Sectorial",
       ],
     },
     {
@@ -63,7 +63,8 @@ export default function ComprehensiveServices() {
       items: [
         "Asesoramiento Personalizado Mercados Bursátiles",
         "Estudios de Mercado, Obtencion de Deuda y Financionamiento",
-        "Apertura de cuenta de Broker Local",
+        "Apertura de cuenta de Hedge Fund Internacional",
+        "apertura de cuenta Broker local",
       ],
     },
   ];
