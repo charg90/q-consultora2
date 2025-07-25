@@ -26,26 +26,21 @@ export default function Soluciones() {
           SOLUCIONES EMPRESARIALES
         </h1>
         <p className="mx-auto mb-8 sm:mb-12 md:mb-16 lg:mb-20 max-w-4xl text-base sm:text-lg md:text-xl leading-relaxed">
-          Nuestros servicios se centran en la atención al cliente con relación a
-          sus necesidades, asesorando para brindar una ayuda enfocada a una
-          mejor toma de decisión con el objetivo de maximizar sus beneficios.
-          Contamos con un espíritu de trabajo reflexivo, proactivo y dedicado a
-          alcanzar Smart targets. Somos una Consultora de Economía que brinda
-          una amplia gama de servicios, utilizamos programas de Inteligencia
-          Macroeconómica Avanzada, lo que nos permite estar un paso adelante
-          logrando resultados superadores.
+          En Q | Capital Group, entendemos que la macroeconomía es un análisis
+          integral impulsado por la IA, que trasciende las cifras para evaluar
+          cada aspecto que conforma una organización
         </p>
         <p className="mx-auto max-w-4xl text-base sm:text-lg md:text-xl leading-relaxed">
-          Desde su establecimiento Q | Capital Group se ha distinguido como un
-          modelo de gestión, atendiendo a una clientela diversa y sofisticada
-          que abarca grandes industias internacionales, medianas y pequeñas
-          empresas, como asi tambien prestigiosas oficinas familiares. El pilar
-          de nuestra firma es nuestro compromiso inquebrantable con un servicio
-          al cliente personalizado, alineando meticulosamente nuestras
-          estrategias con las aspiraciones y necesidades financieras únicas de
-          cada cliente. Nuestro éxito duradero se basa en la solidez de nuestras
-          relaciones y en nuestra búsqueda constante de resultados financieros
-          superiores.
+          Nuestros programas de Inteligencia Macroeconómica Avanzada nos
+          permiten ir más allá de los balances contables, analizando
+          detalladamente los procesos productivos, la eficiencia operativa y la
+          gestión de la mano de obra, tanto directa como indirecta Este enfoque
+          holístico, potenciado por la IA, nos permite identificar cómo cada
+          engranaje del sistema impacta en la economía global de la empresa
+          Diseñamos estrategias personalizadas donde la IA optimiza recursos y
+          mejora la productividad, transformando la organización en un
+          ecosistema eficiente, capaz de adaptarse y prosperar en un entorno
+          dinámico y competitivo
         </p>
       </div>
     </section>

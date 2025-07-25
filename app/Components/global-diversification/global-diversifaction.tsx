@@ -41,9 +41,11 @@ export default function GlobalDiversification() {
             transition={{ delay: 0.8, duration: 1.5, ease: "easeOut" }}
             className="text-xl md:text-2xl text-gray-200 leading-relaxed"
           >
-            Q | Capital Group hace llegar a sus clientes más destacados, la
-            posibilidad de invertir sus ganancias y diversificar su capital en
-            un extenso mercado.
+            Con Q | Capital Group, la IA simplifica y acelera el análisis de
+            instrumentos financieros globales, permitiendo a nuestros clientes
+            más destacados anticiparse y ganar tiempo para invertir y
+            diversificar su capital en un extenso mercado con agilidad y
+            precisión
           </motion.p>
 
           <motion.p
@@ -52,9 +54,11 @@ export default function GlobalDiversification() {
             transition={{ delay: 1.6, duration: 1.5, ease: "easeOut" }}
             className="text-xl md:text-2xl text-gray-300 leading-relaxed"
           >
-            Lograr obtener acceso a instrumentos financieros globalmente, se
-            convierte por medio de Q | Capital Group en una tarea simple y
-            rápida.
+            La Inteligencia Macroeconómica Avanzada y nuestros sistemas
+            analíticos nos permiten identificar las mejores oportunidades de
+            diversificación, transformar datos complejos en información simple y
+            comparativa en un ámbito donde la celeridad es fundamental para una
+            toma de decisión eficaz y eficiente.
           </motion.p>
         </div>
       </div>

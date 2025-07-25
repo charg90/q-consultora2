@@ -48,13 +48,9 @@ export default function ComprehensiveResearch() {
             transition={{ delay: 0.5, duration: 1.5, ease: "easeOut" }}
             className="text-base sm:text-lg md:text-xl leading-relaxed"
           >
-            En Q | Capital Group entendemos que la macroeconomía no es solo una
-            cuestión de cifras, sino un análisis integral de todos los aspectos
-            que conforman una organización. Más allá de los balances contables,
-            evaluamos detalladamente los procesos productivos, la eficiencia
-            operativa y la gestión de la mano de obra, tanto directa como
-            indirecta. Este enfoque holístico nos permite identificar cómo cada
-            engranaje del sistema impacta en la economía global de la empresa.
+            Fundamento Analítico y Estratégico: Desde el inicio, nos
+            distinguimos por el uso de programas de Inteligencia Macroeconómica
+            Avanzada
           </motion.p>
 
           <motion.p
@@ -63,13 +59,13 @@ export default function ComprehensiveResearch() {
             transition={{ delay: 1, duration: 1.5, ease: "easeOut" }}
             className="text-base sm:text-lg md:text-xl leading-relaxed"
           >
-            Creemos firmemente que el éxito sostenible de una organización
-            depende de la alineación de todas sus partes. Por ello, diseñamos
-            estrategias personalizadas que optimizan recursos, mejoran la
-            productividad y fortalecen las bases económicas de la empresa,
-            asegurando su correcto funcionamiento a largo plazo. Nuestro
-            objetivo es transformar el todo en un ecosistema eficiente, capaz de
-            adaptarse y prosperar en un entorno dinámico y competitivo.
+            Esta tecnología nos permite estar &rdquo;un paso adelante&rdquo; en
+            la comprensión de la economía y los mercados, transformando el
+            &rdquo;ruido&rdquo; en calma y brindando soluciones estratégicas a
+            largo plazo. La IA potencia nuestro análisis integral de todos los
+            aspectos que conforman una organización, yendo más allá de los
+            balances contables para evaluar procesos productivos, eficiencia
+            operativa y gestión de mano de obra.
           </motion.p>
         </div>
       </div>

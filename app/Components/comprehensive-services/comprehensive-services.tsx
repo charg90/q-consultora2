@@ -41,30 +41,21 @@ export default function ComprehensiveServices() {
       title: "Gestion Empresarial",
       icon: ChartBar,
       items: [
-        "Coaching Finanzas Empresariales",
-        "Optimizacion Procesos Productivos y Administrativos",
-        "Implementacion y Seguimiento de Sistemas de Gestion",
-        "Management Development",
+        "Implementación y Seguimiento de Sistemas de Gestión, y Optimización de Procesos Productivos y Administrativos, potenciados por algoritmos de IA para maximizar la eficiencia y la toma de decisiones estratégicas",
       ],
     },
     {
       title: "Economia",
       icon: Brain,
       items: [
-        "Workshops y Capacitaciones",
-        "Newsletters ",
-        "Inteligencia Macro-Economica Avanzada",
-        "Plan estrategico de Competitividad Sectorial",
+        "Nuestros servicios de Economía se centran en la Inteligencia Macroeconómica Avanzada, brindando una visión generativa, predictiva y profunda, a través de análisis de datos masivos impulsados por IA y estrategias de competitividad sectorial.",
       ],
     },
     {
       title: "Inversión Futura",
       icon: Briefcase,
       items: [
-        "Asesoramiento Personalizado Mercados Bursátiles",
-        "Estudios de Mercado, Obtencion de Deuda y Financionamiento",
-        "Apertura de cuenta de Hedge Fund Internacional",
-        "apertura de cuenta Broker local",
+        " Estudios de Mercado, con la IA analizando tendencias y comportamientos para identificar las oportunidades de inversión más rentables y facilitar el acceso a instrumentos financieros globales de manera ágil. Nuestro potencial basado en IA, nos permite detectar lo que no es obvio para el ojo humano antes de tiempo.",
       ],
     },
   ];
