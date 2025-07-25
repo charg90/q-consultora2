@@ -31,7 +31,10 @@ export default function EconomySection() {
           Establecidos en 2022
         </h1>
         <p className="mx-auto mb-20 max-w-3xl text-lg md:text-xl">
-        Q | Capital Group redefine la consultoría económica, integrando la Inteligencia Artificial (IA) para transformar el "ruido" de la economía y los mercados en calma estratégica y soluciones a largo plazo.
+          Q | Capital Group redefine la consultoría económica, integrando la
+          Inteligencia Artificial (IA) para transformar el &rdquo;ruido&rdquo;
+          de la economía y los mercados en calma estratégica y soluciones a
+          largo plazo.
         </p>
 
         <div className="grid w-full gap-8 md:grid-cols-3">
