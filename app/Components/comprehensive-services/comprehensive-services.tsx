@@ -63,13 +63,13 @@ export default function ComprehensiveServices() {
   return (
     <div
       ref={ref}
-      className="bg-black text-white min-h-screen w-full py-16 px-4 "
+      className="bg-black text-white min-h-screen w-full py-16 px-4 flex "
     >
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="max-w-6xl mx-auto space-y-16"
+        className="max-w-6xl  space-y-16 flex flex-col items-center justify-center mx-auto"
       >
         <motion.h2
           variants={itemVariants}
@@ -81,7 +81,7 @@ export default function ComprehensiveServices() {
         {services.map((service, index) => (
           <motion.div key={index} variants={itemVariants} className="space-y-6">
             <motion.div
-              className="flex s items-center space-x-4"
+              className="flex justify-center items-center space-x-4"
               initial={{ opacity: 0, x: -20 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
@@ -91,13 +91,13 @@ export default function ComprehensiveServices() {
                 {service.title}
               </h3>
             </motion.div>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ul className="">
               {service.items.map((item, itemIndex) => (
                 <motion.li
                   key={itemIndex}
                   variants={itemVariants}
                   custom={itemIndex}
-                  className="flex items-start space-x-2"
+                  className="flex items-start  space-x-2"
                 >
                   <motion.div
                     className="mt-1"
