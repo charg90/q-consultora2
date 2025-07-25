@@ -30,10 +30,8 @@ export default function FinancialSectorResponsibility() {
           className="text-xl md:text-2xl leading-relaxed"
         >
           Q | Capital Group se dedica a gestionar y potenciar el bienestar
-          económico-financiero de las empresas, estableciendo relaciones basadas
-          en compromiso y sinergia. Contamos con un equipo de especialistas
-          apasionados por la macroeconomía, que brindan soporte estratégico a
-          cada unidad de negocio dentro de nuestra familia de clientes.
+          económico-financiero de su empresa, forjando alianzas estratégicas
+          basadas en el compromiso y la sinergia
         </motion.p>
 
         <motion.p
@@ -42,11 +40,10 @@ export default function FinancialSectorResponsibility() {
           transition={{ delay: 1, duration: 1.5, ease: "easeOut" }}
           className="text-xl md:text-2xl leading-relaxed"
         >
-          Nuestra experiencia y dedicación nos permiten construir una sólida
-          alianza con nuestros clientes, facilitando un crecimiento sostenido y
-          alcanzable. Conscientes de que el tiempo es un recurso valioso,
-          implementamos sistemas y estructuras de análisis diseñados para ser
-          los más eficientes y efectivos del mercado.
+          Nuestro equipo de especialistas apasionados por la macroeconomía,
+          apoyado por sistemas de análisis de datos e Inteligencia Artificial,
+          brinda soporte estratégico a cada unidad de negocio dentro de nuestra
+          familia de clientes
         </motion.p>
 
         <motion.p
@@ -55,9 +52,13 @@ export default function FinancialSectorResponsibility() {
           transition={{ delay: 1.5, duration: 1.5, ease: "easeOut" }}
           className="text-xl md:text-2xl leading-relaxed"
         >
-          De esta manera, optimizamos los recursos necesarios para alcanzar los
-          objetivos planteados, asegurando resultados concretos y alineados con
-          las metas de nuestros clientes.
+          Conscientes de que el tiempo es un recurso valioso, implementamos
+          sistemas y estructuras de análisis diseñados con IA para ser los más
+          eficientes y efectivos del mercado, optimizando los recursos
+          necesarios y asegurando resultados concretos y perfectamente alineados
+          con sus metas Esto facilita un crecimiento sostenido y alcanzable,
+          impulsado por la precisión y el poder predictivo de la Inteligencia
+          Artificial.
         </motion.p>
       </div>
     </div>

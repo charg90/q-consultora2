@@ -34,8 +34,10 @@ export default function QCapitalBackground() {
           transition={{ delay: 0.5, duration: 0.8 }}
           className="text-2xl text-center text-gray-300 italic"
         >
-          La economía y los mercados son ruidosos. Creamos calma y brindamos
-          soluciones estratégicas a largo plazo
+          Somos una Consultora de Economía que, a través de programas de
+          Inteligencia Macroeconómica Avanzada, se adelanta a las tendencias
+          para brindar una ayuda estratégica, proactiva y enfocada a una mejor
+          toma de decisión, garantizando resultados superadores.
         </motion.p>
         <motion.div
           initial={{ opacity: 0 }}
@@ -47,17 +49,20 @@ export default function QCapitalBackground() {
             {
               icon: BarChart3,
               title: "Apoyo Macroeconómico",
-              description: "Impecable soporte en back & front office",
+              description:
+                "Minimizamos riesgos y anticipamos crisis sectoriales potenciados por la IA y nuestro incisivo análisis humano.",
             },
             {
               icon: ShieldCheck,
               title: "Confianza Empresarial",
-              description: "Explore nuevas oportunidades con soporte confiable",
+              description:
+                "La IA nos permite anticipar movimientos, analizar escenarios complejos y ofrecer insights estratégicos.",
             },
             {
               icon: TrendingUp,
-              title: "Crecimiento Extraordinario",
-              description: "Orientación personalizada para su éxito",
+              title: "Crecimiento Futuro",
+              description:
+                "La IA es el motor detrás de nuestro equipo de profesionales de alta calidad, asegurando el éxito y permitiéndole a nuestros clientes, centrarse en su actividad principal.",
             },
           ].map((item, index) => (
             <motion.div
@@ -81,9 +86,8 @@ export default function QCapitalBackground() {
           transition={{ delay: 1.5, duration: 0.8 }}
           className="text-center text-xl text-gray-300 mt-12"
         >
-          Q | Capital Group permite a sus clientes centrarse en su actividad
-          principal, ofreciendo transacciones fluidas y un crecimiento
-          extraordinario.
+          Q | Capital Group revoluciona la forma de analizar y comprender la
+          economía. La IA no reemplaza la visión económica. La potencia.
         </motion.p>
       </motion.div>
     </div>

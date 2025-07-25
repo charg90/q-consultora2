@@ -41,30 +41,21 @@ export default function ComprehensiveServices() {
       title: "Gestion Empresarial",
       icon: ChartBar,
       items: [
-        "Coaching Finanzas Empresariales",
-        "Optimizacion Procesos Productivos y Administrativos",
-        "Implementacion y Seguimiento de Sistemas de Gestion",
-        "Management Development",
+        "Implementación y Seguimiento de Sistemas de Gestión, y Optimización de Procesos Productivos y Administrativos, potenciados por algoritmos de IA para maximizar la eficiencia y la toma de decisiones estratégicas",
       ],
     },
     {
       title: "Economia",
       icon: Brain,
       items: [
-        "Workshops y Capacitaciones",
-        "Newsletters ",
-        "Inteligencia Macro-Economica Avanzada",
-        "Plan estrategico de Competitividad Sectorial",
+        "Nuestros servicios de Economía se centran en la Inteligencia Macroeconómica Avanzada, brindando una visión generativa, predictiva y profunda, a través de análisis de datos masivos impulsados por IA y estrategias de competitividad sectorial.",
       ],
     },
     {
       title: "Inversión Futura",
       icon: Briefcase,
       items: [
-        "Asesoramiento Personalizado Mercados Bursátiles",
-        "Estudios de Mercado, Obtencion de Deuda y Financionamiento",
-        "Apertura de cuenta de Hedge Fund Internacional",
-        "apertura de cuenta Broker local",
+        " Estudios de Mercado, con la IA analizando tendencias y comportamientos para identificar las oportunidades de inversión más rentables y facilitar el acceso a instrumentos financieros globales de manera ágil. Nuestro potencial basado en IA, nos permite detectar lo que no es obvio para el ojo humano antes de tiempo.",
       ],
     },
   ];
@@ -72,13 +63,13 @@ export default function ComprehensiveServices() {
   return (
     <div
       ref={ref}
-      className="bg-black text-white min-h-screen w-full py-16 px-4 "
+      className="bg-black text-white min-h-screen w-full py-16 px-4 flex "
     >
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="max-w-6xl mx-auto space-y-16"
+        className="max-w-6xl  space-y-16 flex flex-col items-center justify-center mx-auto"
       >
         <motion.h2
           variants={itemVariants}
@@ -90,7 +81,7 @@ export default function ComprehensiveServices() {
         {services.map((service, index) => (
           <motion.div key={index} variants={itemVariants} className="space-y-6">
             <motion.div
-              className="flex s items-center space-x-4"
+              className="flex justify-center items-center space-x-4"
               initial={{ opacity: 0, x: -20 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
@@ -100,13 +91,13 @@ export default function ComprehensiveServices() {
                 {service.title}
               </h3>
             </motion.div>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ul className="">
               {service.items.map((item, itemIndex) => (
                 <motion.li
                   key={itemIndex}
                   variants={itemVariants}
                   custom={itemIndex}
-                  className="flex items-start space-x-2"
+                  className="flex items-start  space-x-2"
                 >
                   <motion.div
                     className="mt-1"
