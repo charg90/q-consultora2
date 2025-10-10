@@ -21,7 +21,7 @@ export function TeamSection() {
     },
     {
       name: "Juan Manuel Fabbro",
-      title: "Director Estrategias Corporativas",
+      title: "Director Stock Market & Real Estate Development",
       image: "/juan.jpg",
       bio: "Juan Manuel Fabbro es un profesional con una sólida formación en análisis económico, comercio internacional y estrategia empresarial, especializado en el desarrollo inmobiliario con un profundo enfoque en el análisis y expansión en mercados globales. Su experiencia integra conocimientos avanzados en macroeconomía, finanzas y gestión de riesgos, con un énfasis destacado en el estudio y seguimiento sectorial de mercado bursátil. En su rol dentro de Q | Capital Economic Consulting, lidera la planificación y ejecución de estrategias orientadas al desarrollo de proyectos inmobiliarios, ofreciendo asesoramiento integral que incluye la evaluación de oportunidades de inversión y la viabilidad de nuevos mercados. Su expertise permite diseñar modelos de negocio que potencian la competitividad en entornos dinámicos, apoyándose en un análisis riguroso de tendencias financieras y bursátiles.",
       additionalTitles: ["Lic.Juan Manuel Fabrro"],
