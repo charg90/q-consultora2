@@ -2,13 +2,13 @@ import { TeamMember } from "./team-member";
 
 export function TeamSection() {
   const teamMembers = [
-    // {
-    //   name: "Emiliano Getar",
-    //   title: "Director Unidad Macroeconomía Internacional",
-    //   image: "/emi.jpg",
-    //   bio: "Emiliano Getar es un destacado Macroeconomista y líder empresarial, especializado en contextos geopolíticos. Con más de 10 años de experiencia en diferentes entidades internacionales, Emiliano ha perfeccionado en profundidad temas de alta sensibilidad a nivel económico mundial. La formación académica de Emiliano incluye una Licenciatura en Economía. También ha realizado cursos avanzados en operaciones de Management y gestión empresarial. Su larga trayectoria en industrias internacionales, lo ubican entre una de las personas más destacadas en áreas estratégicas de profunda competitividad.",
-    //   additionalTitles: ["Lic.Emiliano Getar"],
-    // },
+    {
+      name: "Katherine Bilbao",
+      title: "Directora de Estrategias Corporativas",
+      image: "/kat.jpg",
+      bio: "Katherine Bilbao es Directora de Estrategias Corporativas en Q | Capital Economic Consulting, donde lidera la identificación y resolución de problemáticas estructurales en diversos sectores industriales. Su enfoque combina un profundo análisis estratégico con la implementación de tecnologías avanzadas, asegurando el cumplimiento efectivo de los objetivos corporativos de nuestros clientes.Con amplia experiencia en gestión de proyectos y análisis de datos, Katherine asume además la dirección de la estrategia de expansión sectorial interna de la consultora, impulsando el crecimiento sostenible y diversificado de Q | Capital en mercados clave. Su liderazgo integra el trabajo coordinado de equipos multidisciplinarios para diseñar soluciones innovadoras y de alto impacto.En Q | Capital, Katherine es un pilar fundamental para la transformación organizacional, aportando una mirada institucional, profesional y estratégica que potencia la competitividad y la eficiencia operativa en entornos dinámicos.",
+      additionalTitles: ["Lic.Katherine Bilbao"],
+    },
     {
       name: "Damián Quirós",
       title: "CEO & Founder Q | Capital Group",
@@ -23,7 +23,7 @@ export function TeamSection() {
       name: "Juan Manuel Fabbro",
       title: "Director Estrategias Corporativas",
       image: "/juan.jpg",
-      bio: "Juan Manuel Fabbro es un profesional con una sólida formación en análisis económico, comercio internacional y estrategia empresarial, especializado en el desarrollo y expansión de empresas y startups en mercados globales. Su enfoque combina conocimientos avanzados en macroeconomía, finanzas y gestión de riesgos con una visión estratégica para la internacionalización de negocios y el crecimiento sostenible. En su rol dentro Q | Capital Economic Consulting, lidera la planificación y ejecución de estrategias de desarrollo corporativo, brindando asesoramiento integral a empresas emergentes y consolidadas. Su expertise le permite identificar oportunidades de inversión, evaluar la viabilidad de nuevos mercados y diseñar modelos de negocio que optimicen la competitividad en entornos dinámicos.",
+      bio: "Juan Manuel Fabbro es un profesional con una sólida formación en análisis económico, comercio internacional y estrategia empresarial, especializado en el desarrollo inmobiliario con un profundo enfoque en el análisis y expansión en mercados globales. Su experiencia integra conocimientos avanzados en macroeconomía, finanzas y gestión de riesgos, con un énfasis destacado en el estudio y seguimiento sectorial de mercado bursátil. En su rol dentro de Q | Capital Economic Consulting, lidera la planificación y ejecución de estrategias orientadas al desarrollo de proyectos inmobiliarios, ofreciendo asesoramiento integral que incluye la evaluación de oportunidades de inversión y la viabilidad de nuevos mercados. Su expertise permite diseñar modelos de negocio que potencian la competitividad en entornos dinámicos, apoyándose en un análisis riguroso de tendencias financieras y bursátiles.",
       additionalTitles: ["Lic.Juan Manuel Fabrro"],
     },
   ];
@@ -34,8 +34,8 @@ export function TeamSection() {
         <h1 className="text-5xl font-bold text-center text-white mb-16 tracking-tight">
           Meet Our Team
         </h1>
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"> */}
-        <div className="flex flex-col md:flex-row justify-center items-center gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {/* <div className="flex flex-col md:flex-row justify-center items-center gap-12"> */}
           {teamMembers.map((member) => (
             <TeamMember key={member.name} {...member} />
           ))}
