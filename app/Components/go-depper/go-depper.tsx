@@ -50,7 +50,7 @@ export default function GoDeeper() {
 
   const handleDownload = () => {
     const link = document.createElement("a");
-    link.href = "/brochure.pdf";
+    link.href = "/Q-Capital-Consulting-IA.pdf";
     link.download = "Q_Capital_Brochure.pdf";
     document.body.appendChild(link);
     link.click();
