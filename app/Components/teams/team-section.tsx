@@ -2,13 +2,13 @@ import { TeamMember } from "./team-member";
 
 export function TeamSection() {
   const teamMembers = [
-    {
-      name: "Emiliano Getar",
-      title: "Director Unidad Macroeconomía Internacional",
-      image: "/emi.jpg",
-      bio: "Emiliano Getar es un destacado Macroeconomista y líder empresarial, especializado en contextos geopolíticos. Con más de 10 años de experiencia en diferentes entidades internacionales, Emiliano ha perfeccionado en profundidad temas de alta sensibilidad a nivel económico mundial. La formación académica de Emiliano incluye una Licenciatura en Economía. También ha realizado cursos avanzados en operaciones de Management y gestión empresarial. Su larga trayectoria en industrias internacionales, lo ubican entre una de las personas más destacadas en áreas estratégicas de profunda competitividad.",
-      additionalTitles: ["Lic.Emiliano Getar"],
-    },
+    // {
+    //   name: "Emiliano Getar",
+    //   title: "Director Unidad Macroeconomía Internacional",
+    //   image: "/emi.jpg",
+    //   bio: "Emiliano Getar es un destacado Macroeconomista y líder empresarial, especializado en contextos geopolíticos. Con más de 10 años de experiencia en diferentes entidades internacionales, Emiliano ha perfeccionado en profundidad temas de alta sensibilidad a nivel económico mundial. La formación académica de Emiliano incluye una Licenciatura en Economía. También ha realizado cursos avanzados en operaciones de Management y gestión empresarial. Su larga trayectoria en industrias internacionales, lo ubican entre una de las personas más destacadas en áreas estratégicas de profunda competitividad.",
+    //   additionalTitles: ["Lic.Emiliano Getar"],
+    // },
     {
       name: "Damián Quirós",
       title: "CEO & Founder Q | Capital Group",
@@ -34,7 +34,8 @@ export function TeamSection() {
         <h1 className="text-5xl font-bold text-center text-white mb-16 tracking-tight">
           Meet Our Team
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"> */}
+        <div className="flex flex-col md:flex-row justify-center items-center gap-12">
           {teamMembers.map((member) => (
             <TeamMember key={member.name} {...member} />
           ))}
